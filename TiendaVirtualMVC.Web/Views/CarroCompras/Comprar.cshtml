@@ -1,0 +1,29 @@
+﻿@model TiendaVirtualMVC.Web.Models.ViewModels.DetallesEnvio
+
+@{
+    ViewBag.Title = "Comprar";
+}
+
+<h2>Comprar</h2>
+
+@using (Html.BeginForm()) {
+        <div class="form_row">
+            @Html.LabelFor(model => model.Nombre)
+            @Html.EditorFor(model => model.Nombre)
+        </div>
+
+        <div class="form_row">
+            @Html.LabelFor(model => model.Direccion)
+            @Html.EditorFor(model => model.Direccion)
+        </div>
+
+        <div class="form_row">
+            @Html.LabelFor(model => model.FechaEntrega)
+            @Html.EditorFor(model => model.FechaEntrega)
+        </div>
+		<div class="form_row">
+			<a href="#" class="prod_details">Comprar</a>
+		</div>
+
+}
+

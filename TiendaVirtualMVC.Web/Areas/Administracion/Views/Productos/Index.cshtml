@@ -1,0 +1,149 @@
+﻿@model IEnumerable<TiendaVirtualMVC.Web.Models.Producto>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Listado de Productos</h2>
+
+
+@if (TempData["mensaje"] != null)
+{
+    <div>
+        @TempData["mensaje"]
+    </div>
+}
+
+<div id ="creacion_productos">
+    @using (Html.BeginForm("crear","productos"))
+    {
+         <p>
+            Nombre:
+            @Html.TextBox("Nombre")
+        </p>
+        <p>
+            Precio:
+            @Html.TextBox("Precio")
+        </p>
+        <p>
+            Categoria:
+            @Html.DropDownList("CategoriaId")
+        </p>
+
+        <input id="Enviar" type="submit" name="Enviar" />
+    }
+</div>
+
+
+<table id="productos" class="Grid">
+    <tr>
+        <th>
+            Nombre
+        </th>
+        <th>
+            Precio
+        </th>
+        <th>
+            Categoria
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+               @item.Nombre
+            </td>
+            <td>
+                @item.Precio.ToString("c")
+            </td>
+            <td>
+                @item.Categoria.Nombre
+            </td>
+            <td>
+                @Html.ActionLink("Editar", "editar", new { id = item.Id })|
+                @Html.ActionLink("Eliminar", "eliminar", new { id = item.Id }, new { @class = "delete-link" })
+            </td>
+        </tr>
+    }
+
+</table>
+
+<p>
+    @Html.ActionLink("Crear Nuevo", "Crear")
+</p>
+
+<script id="productoTpl" type="text/template">
+        <tr>
+            <td>
+               {{nombre}}
+            </td>
+            <td>
+                {{formatMoney precio}}
+            </td>
+            <td>
+                {{categoriaNombre}}
+            </td>
+            <td>
+            <a href='@Url.Action("editar")/{{id}}'>Editar</a>
+            <a href='@Url.Action("eliminar")/{{id}}' class="delete-link">Eliminar</a>
+            </td>
+        </tr>
+</script>
+
+<script type="text/javascript" src="@Url.Content("/Scripts/handlebars-1.0.0.beta.6.js")"></script>
+<script type="text/javascript">
+
+    $(function () {
+        var source = $("#productoTpl").html();
+        var template = Handlebars.compile(source);
+
+        var Producto = function (nombre, precio, categoriaId) {
+            this.nombre = nombre;
+            this.precio = precio;
+            this.categoriaId = categoriaId;
+        };
+
+        $(".delete-link").bind('click', function (e) {
+            e.preventDefault();
+            var link = $(this);
+            var url = link.attr("href");
+            $.ajax({
+                type: "POST",
+                url: url,
+                success: function (data) {
+                    link.parent().parent().fadeTo(500, 0, function () {
+                        $(this).remove();
+                    });
+                }
+            });
+        });
+        $("#Enviar").click(function (e) {
+            e.preventDefault();
+            var form = $(this).parent();
+            var url = form.attr("action");
+            var producto = new Producto($("#Nombre").val(),
+                                        $("#Precio").val(),
+                                        $("#CategoriaId option:selected").val());
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: JSON.stringify(producto),
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    producto.id = data.id;
+                    producto.categoriaNombre = $("#CategoriaId option:selected").text();
+                    var fila = template(producto)
+                    $("#productos tr:last").after(fila);
+                }
+            });
+        });
+
+
+        Handlebars.registerHelper('formatMoney', function (money) {
+            return "S/." + parseFloat(money,10).toFixed(2);
+        });
+    });
+</script>

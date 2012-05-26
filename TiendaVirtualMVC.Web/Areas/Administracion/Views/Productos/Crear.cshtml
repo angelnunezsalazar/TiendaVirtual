@@ -1,0 +1,41 @@
+﻿@model TiendaVirtualMVC.Web.Models.Producto
+
+@{
+    ViewBag.Title = "Crear";
+}
+
+<h2>Crear</h2>
+
+@using (Html.BeginForm()) {
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Nombre)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.Nombre)
+            @Html.ValidationMessageFor(model=>model.Nombre)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Precio)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.Precio)
+            @Html.ValidationMessageFor(model => model.Precio)
+        </div>
+    
+        <div class="editor-label">
+            @Html.Label("CategoriaId")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("CategoriaId")
+        </div>
+
+        <p>
+            <input type="submit" value="Create" />
+        </p>
+}
+
+<div>
+    @Html.ActionLink("Regresar", "Index")
+</div>

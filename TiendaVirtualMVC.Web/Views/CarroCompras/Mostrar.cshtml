@@ -1,0 +1,63 @@
+﻿@model TiendaVirtualMVC.Web.Models.ViewModels.CarroCompras
+
+@{
+    ViewBag.Title = "Carro de Compras";
+}
+
+<h2 class="center_title_bar">ViewBag.Title</h2>
+
+<table class="cart_list">
+    <thead>
+        <tr>
+            <th class="product_name">
+                Producto
+            </th>
+            <th>
+                Cantidad
+            </th>
+            <th>
+                Precio
+            </th>
+            <th>
+                Subtotal
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.detalle) {
+            <tr>
+                <td>
+                    @item.Producto.Nombre
+                </td>
+                <td>
+                    @item.Cantidad
+                </td>
+                <td>
+                    @item.Producto.Precio.ToString("c")
+                </td>
+                <td>
+                    @item.SubTotal.ToString("c")
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3" class="total">
+                Total:
+            </td>
+            <td>
+                @Model.Total().ToString("c")
+            </td>
+        </tr>
+    </tfoot>
+</table>
+
+<a href="@ViewBag.RegresarUrl" class="return_url">Regresar</a>
+
+<script type="text/javascript">
+    $(function () {
+        $('.cart_list tbody tr:even').addClass('even');
+        $('.cart_list tbody tr:odd').addClass('odd');
+    });
+</script>

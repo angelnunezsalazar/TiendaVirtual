@@ -1,0 +1,23 @@
+﻿@using TiendaVirtualMVC.Web.HtmlHelpers
+@model TiendaVirtualMVC.Web.Pagination.PagedList
+@{
+    ViewBag.Title = "Productos";
+}
+
+<h2 class="center_title_bar">Productos</h2>
+@foreach (var producto in Model)
+{ 
+    @Html.Partial("_Producto",producto)
+}
+
+<div id="pagination">
+    @Html.PageLinks(Model,ViewContext.RouteData.Values["categoria"])
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('.prod_buy').click(function () {
+            $(this).closest('form').submit();
+        });
+    });
+</script>
